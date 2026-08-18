@@ -56,16 +56,6 @@ RUN sed -i \
     src/app/globals.css
 
 # ============================================================
-# Make Caddy listen on HTTP instead of trying to obtain
-# a TLS certificate for "8080".
-#
-# Fly Proxy handles public HTTPS.
-# ============================================================
-RUN sed -i \
-    's|^{$PORT:8080}, :81 {|:{$PORT:8080}, :81 {|' \
-    Caddyfile
-
-# ============================================================
 # Prisma client generation
 # ============================================================
 RUN bun run db:generate

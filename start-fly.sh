@@ -30,10 +30,10 @@ export DATABASE_URL="file:$DB_PATH"
 
 echo "🔄 Running Prisma database schema sync..."
 cd /app
-if command -v bun &> /dev/null; then
-    bun prisma db push --accept-data-loss || echo "⚠️ Database sync warning"
+if command -v prisma &> /dev/null; then
+    prisma db push --accept-data-loss || echo "⚠️ Database sync warning"
 else
-    npx prisma db push --accept-data-loss || echo "⚠️ Database sync warning"
+    bunx --yes prisma db push --accept-data-loss || echo "⚠️ Database sync warning"
 fi
 
 # Symlink persistent app and log directories

@@ -1,4 +1,12 @@
-{$PORT:8080}, :81 {
+# Fly.io terminates TLS at its edge proxy and forwards plain HTTP
+# to the container, so Caddy must listen on plain HTTP without
+# auto HTTPS (otherwise it binds :443 only and 8080 is unreachable).
+{
+	auto_https off
+	admin off
+}
+
+:{$PORT:8080} {
 	@transform_port_query {
 		query XTransformPort=*
 	}
@@ -12,6 +20,18 @@
 		}
 	}
 
+	handle {
+		reverse_proxy localhost:3000 {
+			header_up Host {host}
+			header_up X-Forwarded-For {remote_host}
+			header_up X-Forwarded-Proto {scheme}
+			header_up X-Real-IP {remote_host}
+		}
+	}
+}
+
+# Legacy port 81 kept for local development only
+:81 {
 	handle {
 		reverse_proxy localhost:3000 {
 			header_up Host {host}

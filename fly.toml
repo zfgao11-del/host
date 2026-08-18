@@ -9,7 +9,10 @@ primary_region = "lax"
 [env]
   PORT = "8080"
   NODE_ENV = "production"
-  DATABASE_URL = "file:/data/custom.db"
+  # DATABASE_URL removed from [env] because it points to a sensitive
+  # SQLite file on the persistent volume. The startup script
+  # (start-fly.sh) exports it at runtime for Prisma. Optionally set it
+  # as a secret with: fly secrets set DATABASE_URL=file:/data/custom.db
 
 [mounts]
   source = "host_data"
